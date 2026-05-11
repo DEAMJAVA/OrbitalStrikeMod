@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "orbital-strike-mod",
+	"version": "${version}",
+	"name": "Orbital Strike Mod",
+	"description": "The Orbital Strike Cannon of Wemmbu",
+	"authors": [
+		"DEAMJAVA"
+	],
+	"contact": {
+		"homepage": "https://github.com/DEAMJAVA/OrbitalStrikeMod",
+		"sources": "https://github.com/DEAMJAVA/OrbitalStrikeMod"
+	},
+	"license": "GPLv3",
+	"icon": "assets/orbital-strike-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "net.deamjava.orbital_strike_mod.OrbitalStrikeMod",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"orbital-strike-mod.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	}
+}
