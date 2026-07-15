@@ -25,6 +25,11 @@ class OrbitalStrikeMod : ModInitializer {
         OrbitalStrikeCommands.register()
         OrbitalItems.registerItemUsageHandler()
         ServerTickEvents.END_SERVER_TICK.register(ServerTickEvents.EndTick { server: MinecraftServer? -> this.cleanupExpiredAuthorizations() })
+
+        net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile::class.java
+            .declaredFields.forEach {
+                OrbitalStrikeMod.LOGGER.info("AbstractHurtingProjectile field: ${it.name} (${it.type})")
+            }
     }
 
 

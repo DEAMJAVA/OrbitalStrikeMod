@@ -147,7 +147,7 @@ object OrbitalStrikeCommands {
                 .requires { isDeveloperOrOp(it) }
                 .then(Commands.argument("payload", StringArgumentType.string())
                     .suggests { _, builder ->
-                        listOf("stab", "nuke", "wolf", "stasis", "railgun").forEach { builder.suggest(it) }
+                        listOf("stab", "nuke", "wolf", "stasis", "railgun", "wither").forEach { builder.suggest(it) }
                         builder.buildFuture()
                     }
                     .then(Commands.argument("type_or_amount", StringArgumentType.word())
@@ -422,6 +422,7 @@ object OrbitalStrikeCommands {
             payload.equals("stab", ignoreCase = true) -> repeat(amount) { player.addItem(OrbitalItems.createStabShot()) }
             payload.equals("nuke", ignoreCase = true) -> repeat(amount) { player.addItem(OrbitalItems.createNukeShot(null)) }
             payload.equals("wolf", ignoreCase = true) -> repeat(amount) { player.addItem(OrbitalItems.createWolfShot(150)) }
+            payload.equals("wither", ignoreCase = true) -> repeat(amount) { player.addItem(OrbitalItems.createWitherCannon(null)) }
             payload.equals("stasis", ignoreCase = true) -> {
                 ctx.source.sendFailure(Component.literal("Usage: /givef stasis <amount> <x|crosshair> <y|crosshair> <z|crosshair>"))
                 return 0

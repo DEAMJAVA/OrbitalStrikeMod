@@ -94,6 +94,17 @@ object OrbitalItems {
             }
         }
     }
+
+    fun createWitherCannon(ringSize: Int? = null, density: Double = 1.0): ItemStack =
+        ItemStack(Items.FISHING_ROD).apply {
+            set(DataComponents.CUSTOM_NAME, Component.literal("Wither Cannon"))
+            set(DataComponents.DAMAGE, maxDamage - 1)
+            set(DataComponents.CUSTOM_DATA, CustomData.of(buildTag {
+                putString("item_uuid", UUID.randomUUID().toString())
+                ringSize?.let { putInt("wither_ring_size", it) }
+                putDouble("wither_density", density)
+            }))
+        }
     
     private fun handleCrossbowUse(
         player: ServerPlayer,
@@ -121,7 +132,7 @@ object OrbitalItems {
         val name = stack.get(DataComponents.CUSTOM_NAME)?.getString()
             ?: return InteractionResult.PASS
 
-        if (name !in setOf("Stab Shot", "Nuke Shot", "Orbital Wolf", "Stasis")) {
+        if (name !in setOf("Stab Shot", "Nuke Shot", "Orbital Wolf", "Stasis", "Wither Cannon")) {
             return InteractionResult.PASS
         }
 
@@ -191,6 +202,23 @@ object OrbitalItems {
                         override fun run() {
                             world.server.execute {
                                 OrbitalStrikeLogic.summonStab(world, targetX, targetZ, groundY)
+                            }
+                        }
+                    }, delayMs)
+                }
+                "Wither Cannon" -> {
+                    val ringSize = if (nbt.contains("wither_ring_size") && nbt.getInt("wither_ring_size").isPresent)
+                        nbt.getInt("wither_ring_size").get()
+                    else
+                        DEFAULT_RINGS
+                    val density = if (nbt.contains("wither_density") && nbt.getDouble("wither_density").isPresent)
+                        nbt.getDouble("wither_density").get()
+                    else
+                        1.0
+                    Timer().schedule(object : TimerTask() {
+                        override fun run() {
+                            world.server.execute {
+                                OrbitalStrikeLogic.summonWitherCannon(world, targetX, groundY + 40, targetZ, ringSize)
                             }
                         }
                     }, delayMs)

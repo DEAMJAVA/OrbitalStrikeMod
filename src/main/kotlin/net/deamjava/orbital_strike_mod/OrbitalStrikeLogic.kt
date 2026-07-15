@@ -23,6 +23,7 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import net.minecraft.world.entity.Relative
+import kotlin.math.pow
 
 object OrbitalStrikeLogic {
 
@@ -161,6 +162,95 @@ object OrbitalStrikeLogic {
             world.addFreshEntity(arrow)
         }
     }
+
+    fun summonWitherCannon(world: Level, centerX: Int, centerY: Int, centerZ: Int, size: Int) {
+        val apexX = centerX + 0.5
+        val apexY = centerY.toDouble()
+        val apexZ = centerZ + 0.5
+
+        val skullDensity = 4.0   // skulls per ring — higher = more skulls per ring
+        val ringDensity  = 4.0   // rings per size unit — higher = more rings for the same size
+
+        // Number of rings scales with both size and ringDensity
+        val numRings = (size * ringDensity).toInt().coerceAtLeast(1)
+
+        // Max cone angle capped at 75 degrees from vertical (= 15 degrees from ground)
+        // size drives how wide the cone opens, capped at 75
+        val maxAngle = (size * 3.0).coerceAtMost(75.0)
+
+        spawnWitherSkull(world, apexX, apexY, apexZ, 0.0, -1.0, 0.0)
+
+        for (ringIndex in 1..numRings) {
+            val baseCount = when {
+                ringIndex == 1 -> 8
+                ringIndex == 2 -> 12
+                ringIndex in 3..5 -> 16
+                else -> 20
+            }
+            val skullsPerRing = (baseCount * skullDensity).toInt().coerceAtLeast(1)
+
+            // Evenly distribute rings from 5 degrees up to maxAngle
+            val coneAngle = Math.toRadians(
+                5.0 + (ringIndex.toDouble() / numRings) * (maxAngle - 5.0)
+            )
+
+            val downSpeed = 1.0
+            val lateralSpeed = Math.tan(coneAngle) * downSpeed
+
+            repeat(skullsPerRing) { i ->
+                val angle = (i.toDouble() / skullsPerRing) * 2.0 * Math.PI
+                val vx = Math.cos(angle) * lateralSpeed
+                val vz = Math.sin(angle) * lateralSpeed
+                spawnWitherSkull(world, apexX, apexY, apexZ, vx, -downSpeed, vz)
+            }
+        }
+    }
+
+    private fun spawnWitherSkull(world: Level, x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double) {
+        val skull = net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull(
+            net.minecraft.world.entity.EntityType.WITHER_SKULL,
+            world
+        )
+        skull.setPos(x, y, z)
+        skull.setDangerous(true)
+
+        // Normalize direction
+        val length = Math.sqrt(vx * vx + vy * vy + vz * vz).coerceAtLeast(0.0001)
+        val nx = vx / length
+        val ny = vy / length
+        val nz = vz / length
+
+
+        skull.deltaMovement = Vec3(nx * 5.0, ny * 5.0, nz * 5.0)
+
+        world.addFreshEntity(skull)
+    }
+
+//    private fun spawnWitherSkull(world: Level, x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double) {
+//        val skull = net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull(
+//            net.minecraft.world.entity.EntityType.WITHER_SKULL,
+//            world
+//        )
+//        skull.setPos(x, y, z)
+//        skull.setDangerous(true)
+//        try {
+//            val xField = net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile::class.java
+//                .getDeclaredField("xPower")
+//            val yField = net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile::class.java
+//                .getDeclaredField("yPower")
+//            val zField = net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile::class.java
+//                .getDeclaredField("zPower")
+//            xField.isAccessible = true
+//            yField.isAccessible = true
+//            zField.isAccessible = true
+//            xField.set(skull, vx)
+//            yField.set(skull, vy)
+//            zField.set(skull, vz)
+//        } catch (e: Exception) {
+//            skull.deltaMovement = Vec3(vx, vy, vz)
+//        }
+//        world.addFreshEntity(skull)
+//    }
 
     data class Location(val x: Double, val y: Double, val z: Double)
 }
