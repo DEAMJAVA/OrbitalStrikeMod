@@ -19,6 +19,7 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.UUID
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.item.ItemStackTemplate
 
 object OrbitalItems {
 
@@ -70,7 +71,7 @@ object OrbitalItems {
             val displayName = if (type.equals("orbital", ignoreCase = true)) "Orbital Railgun" else "Railgun"
             set(DataComponents.CUSTOM_NAME, Component.literal(displayName))
             set(DataComponents.DAMAGE, maxDamage - 1)
-            set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(ItemStack(Items.ARROW)))
+            set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(ItemStackTemplate(Items.ARROW)))
             set(DataComponents.CUSTOM_DATA, CustomData.of(buildTag {
                 putString("item_uuid", UUID.randomUUID().toString())
                 putString("railgun_type", type)
@@ -167,9 +168,8 @@ object OrbitalItems {
     ): InteractionResult {
         val hitResult = player.pick(500.0, 0f, false)
         if (hitResult.type != HitResult.Type.BLOCK) {
-            player.displayClientMessage(
-                Component.literal("No block in crosshair!").withStyle(ChatFormatting.RED),
-                false
+            player.sendOverlayMessage(
+                Component.literal("No block in crosshair!").withStyle(ChatFormatting.RED)
             )
             return InteractionResult.PASS
         }
@@ -243,7 +243,7 @@ object OrbitalItems {
         return if (!OrbitalStrikeMod.fishingRodCastState.containsKey(itemUUID)) {
             OrbitalStrikeMod.fishingRodCastState[itemUUID] = true
             val wolfAmount = nbt.getInt("wolf_amount").let { if (it.isPresent && it.get() > 0) it.get() else 150 }
-            val serverLevel = player.level() as ServerLevel
+            val serverLevel = player.level()
             val delayMs = (OrbitalStrikeMod.config.rodDelay * 1000).toLong()
 
             serverLevel.server.execute {
@@ -304,9 +304,8 @@ object OrbitalItems {
                 }, delayMs)
             }
         } else if (storedX == Int.MIN_VALUE || storedY == Int.MIN_VALUE || storedZ == Int.MIN_VALUE) {
-            player.displayClientMessage(
-                Component.literal("No block in crosshair to determine coordinates!").withStyle(ChatFormatting.BLACK),
-                false
+            player.sendOverlayMessage(
+                Component.literal("No block in crosshair to determine coordinates!").withStyle(ChatFormatting.BLACK)
             )
         }
 
@@ -327,7 +326,7 @@ object OrbitalItems {
             targetPos.y.toDouble(),
             targetPos.z.toDouble()
         )
-        val serverLevel = player.level() as ServerLevel
+        val serverLevel = player.level()
         val delayMs = OrbitalStrikeMod.config
             .parseRailgunDelayToMillis(OrbitalStrikeMod.config.railgunDelay)
 

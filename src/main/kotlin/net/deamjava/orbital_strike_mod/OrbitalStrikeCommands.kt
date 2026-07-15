@@ -188,7 +188,7 @@ object OrbitalStrikeCommands {
                         val player = try { ctx.source.playerOrException } catch (e: Exception) { return@executes 0 }
 
                         if (!OrbitalStrikeMod.config.isRecipeEnabled) {
-                            player.displayClientMessage(Component.literal("Crafting Disabled!").withStyle(ChatFormatting.YELLOW), false)
+                            player.sendSystemMessage(Component.literal("Crafting Disabled!").withStyle(ChatFormatting.YELLOW))
                             return@executes 0
                         }
 
@@ -197,10 +197,10 @@ object OrbitalStrikeCommands {
                                 if (OrbitalStrikeRecipes.hasStabMaterials(player)) {
                                     OrbitalStrikeRecipes.consumeStabMaterials(player)
                                     player.addItem(OrbitalItems.createStabShot())
-                                    player.displayClientMessage(Component.literal("Successfully crafted Stab Shot!").withStyle(ChatFormatting.GREEN), false)
+                                    player.sendSystemMessage(Component.literal("Successfully crafted Stab Shot!").withStyle(ChatFormatting.GREEN))
                                     1
                                 } else {
-                                    player.displayClientMessage(Component.literal("You do not have enough materials!").withStyle(ChatFormatting.YELLOW), false)
+                                    player.sendSystemMessage(Component.literal("You do not have enough materials!").withStyle(ChatFormatting.YELLOW))
                                     0
                                 }
                             }
@@ -208,10 +208,10 @@ object OrbitalStrikeCommands {
                                 if (OrbitalStrikeRecipes.hasNukeMaterials(player)) {
                                     OrbitalStrikeRecipes.consumeNukeMaterials(player)
                                     player.addItem(OrbitalItems.createNukeShot(null))
-                                    player.displayClientMessage(Component.literal("Successfully crafted Nuke Shot!").withStyle(ChatFormatting.GREEN), false)
+                                    player.sendSystemMessage(Component.literal("Successfully crafted Nuke Shot!").withStyle(ChatFormatting.GREEN))
                                     1
                                 } else {
-                                    player.displayClientMessage(Component.literal("You do not have enough materials!").withStyle(ChatFormatting.YELLOW), false)
+                                    player.sendSystemMessage(Component.literal("You do not have enough materials!").withStyle(ChatFormatting.YELLOW))
                                     0
                                 }
                             }
@@ -232,7 +232,7 @@ object OrbitalStrikeCommands {
                 .executes { ctx ->
                     val player = try { ctx.source.playerOrException } catch (e: Exception) { return@executes 0 }
                     if (!OrbitalStrikeMod.config.isRecipeEnabled) {
-                        player.displayClientMessage(Component.literal("Crafting Disabled!").withStyle(ChatFormatting.YELLOW), false)
+                        player.sendSystemMessage(Component.literal("Crafting Disabled!").withStyle(ChatFormatting.YELLOW))
                         0
                     } else {
                         OrbitalStrikeRecipes.showRecipes(player)
@@ -473,7 +473,7 @@ object OrbitalStrikeCommands {
                     return 0
                 }
                 if (wolfAmount > MAX_WOLF_AMOUNT) {
-                    player.displayClientMessage(Component.literal("Wolf amount cannot exceed 500 to prevent server crashes!").withStyle(ChatFormatting.YELLOW), false)
+                    player.sendSystemMessage(Component.literal("Wolf amount cannot exceed 500 to prevent server crashes!").withStyle(ChatFormatting.YELLOW))
                     return 0
                 }
                 repeat(firstNum) { player.addItem(OrbitalItems.createWolfShot(wolfAmount)) }

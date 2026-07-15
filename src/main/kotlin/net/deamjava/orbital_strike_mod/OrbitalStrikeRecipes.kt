@@ -61,31 +61,31 @@ object OrbitalStrikeRecipes {
     fun showRecipes(player: Player) {
         val config = OrbitalStrikeMod.config
 
-        player.displayClientMessage(Component.literal("=== Orbital Strike Crafting Recipes ===")
-            .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD), false)
-        player.displayClientMessage(Component.literal(""), false)
+        player.sendSystemMessage(Component.literal("=== Orbital Strike Crafting Recipes ===")
+            .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD))
+        player.sendSystemMessage(Component.literal(""))
 
-        player.displayClientMessage(Component.literal("Nuke Shot:")
-            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD), false)
+        player.sendSystemMessage(Component.literal("Nuke Shot:")
+            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
         val nukeRecipe = config.nukeIngredients.entries.joinToString(", ") { (item, amount) ->
             "x$amount ${formatItemName(item)}"
         }
-        player.displayClientMessage(Component.literal("  $nukeRecipe")
-            .withStyle(ChatFormatting.WHITE), false)
-        player.displayClientMessage(Component.literal("  Command: /craftf nuke")
-            .withStyle(ChatFormatting.GREEN), false)
+        player.sendSystemMessage(Component.literal("  $nukeRecipe")
+            .withStyle(ChatFormatting.WHITE))
+        player.sendSystemMessage(Component.literal("  Command: /craftf nuke")
+            .withStyle(ChatFormatting.GREEN))
 
-        player.displayClientMessage(Component.literal(""), false)
+        player.sendSystemMessage(Component.literal(""))
 
-        player.displayClientMessage(Component.literal("Stab Shot:")
-            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD), false)
+        player.sendSystemMessage(Component.literal("Stab Shot:")
+            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
         val stabRecipe = config.stabIngredients.entries.joinToString(", ") { (item, amount) ->
             "x$amount ${formatItemName(item)}"
         }
-        player.displayClientMessage(Component.literal("  $stabRecipe")
-            .withStyle(ChatFormatting.WHITE), false)
-        player.displayClientMessage(Component.literal("  Command: /craftf stab")
-            .withStyle(ChatFormatting.GREEN), false)
+        player.sendSystemMessage(Component.literal("  $stabRecipe")
+            .withStyle(ChatFormatting.WHITE))
+        player.sendSystemMessage(Component.literal("  Command: /craftf stab")
+            .withStyle(ChatFormatting.GREEN))
     }
 
     private fun formatItemName(item: Item): String {

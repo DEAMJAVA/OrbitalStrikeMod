@@ -17,6 +17,7 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import java.util.Random
 import kotlin.math.cos
@@ -93,7 +94,7 @@ object OrbitalStrikeLogic {
         val pz = player.z
 
         repeat(amount) {
-            val wolf = Wolf(EntityType.WOLF, world)
+            val wolf = Wolf(EntityTypes.WOLF, world)
             wolf.absSnapTo(px, py, pz, player.yRot, player.xRot)
 
             wolf.tame(player)
@@ -208,7 +209,7 @@ object OrbitalStrikeLogic {
 
     private fun spawnWitherSkull(world: Level, x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double) {
         val skull = net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull(
-            net.minecraft.world.entity.EntityType.WITHER_SKULL,
+            net.minecraft.world.entity.EntityTypes.WITHER_SKULL,
             world
         )
         skull.setPos(x, y, z)
